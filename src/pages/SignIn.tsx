@@ -1,10 +1,15 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Globe, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/services/authService";
@@ -24,17 +29,18 @@ const SignIn = () => {
 
     try {
       const response = await authService.signIn(email, password);
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in.",
       });
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (error: any) {
       toast({
         title: "Sign in failed",
-        description: error.message || "Please check your credentials and try again.",
+        description:
+          error.message || "Please check your credentials and try again.",
         variant: "destructive",
       });
     } finally {
@@ -48,16 +54,15 @@ const SignIn = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-4 mb-4">
-            <Link to="/" className="inline-flex items-center space-x-2 text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 transition-colors">
+            <Link
+              to="/"
+              className="inline-flex items-center space-x-2 text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 transition-colors"
+            >
               <Globe className="h-8 w-8 text-blue-600" />
               <span>WebsiteBoss</span>
             </Link>
             <ThemeToggle />
           </div>
-        </div>
-            <Globe className="h-8 w-8 text-blue-600" />
-            <span>WebsiteBoss</span>
-          </Link>
         </div>
 
         <Card className="shadow-xl border-0 dark:bg-gray-800">
@@ -72,7 +77,10 @@ const SignIn = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700 dark:text-gray-300 font-medium">
+                <Label
+                  htmlFor="email"
+                  className="text-gray-700 dark:text-gray-300 font-medium"
+                >
                   Email Address
                 </Label>
                 <Input
@@ -87,7 +95,10 @@ const SignIn = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-700 dark:text-gray-300 font-medium">
+                <Label
+                  htmlFor="password"
+                  className="text-gray-700 dark:text-gray-300 font-medium"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -105,7 +116,11 @@ const SignIn = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -122,7 +137,10 @@ const SignIn = () => {
             <div className="mt-6 text-center">
               <p className="text-gray-600 dark:text-gray-300">
                 Don't have an account?{" "}
-                <Link to="/signup" className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+                <Link
+                  to="/signup"
+                  className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                >
                   Sign up
                 </Link>
               </p>

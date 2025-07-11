@@ -1,10 +1,15 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Globe, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/services/authService";
@@ -15,7 +20,7 @@ const SignUp = () => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -24,15 +29,15 @@ const SignUp = () => {
   const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Password mismatch",
@@ -54,14 +59,19 @@ const SignUp = () => {
     setIsLoading(true);
 
     try {
-      const response = await authService.signUp(formData.name, formData.email, formData.password);
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      const response = await authService.signUp(
+        formData.name,
+        formData.email,
+        formData.password
+      );
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
       toast({
         title: "Account created successfully!",
-        description: "Welcome to WebsiteBoss. Let's start building your website.",
+        description:
+          "Welcome to WebsiteBoss. Let's start building your website.",
       });
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (error: any) {
       toast({
         title: "Sign up failed",
@@ -79,16 +89,15 @@ const SignUp = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-4 mb-4">
-            <Link to="/" className="inline-flex items-center space-x-2 text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 transition-colors">
+            <Link
+              to="/"
+              className="inline-flex items-center space-x-2 text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 transition-colors"
+            >
               <Globe className="h-8 w-8 text-blue-600" />
               <span>WebsiteBoss</span>
             </Link>
             <ThemeToggle />
           </div>
-        </div>
-            <Globe className="h-8 w-8 text-blue-600" />
-            <span>WebsiteBoss</span>
-          </Link>
         </div>
 
         <Card className="shadow-xl border-0 dark:bg-gray-800">
@@ -103,7 +112,10 @@ const SignUp = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-gray-700 dark:text-gray-300 font-medium">
+                <Label
+                  htmlFor="name"
+                  className="text-gray-700 dark:text-gray-300 font-medium"
+                >
                   Full Name
                 </Label>
                 <Input
@@ -119,7 +131,10 @@ const SignUp = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700 dark:text-gray-300 font-medium">
+                <Label
+                  htmlFor="email"
+                  className="text-gray-700 dark:text-gray-300 font-medium"
+                >
                   Email Address
                 </Label>
                 <Input
@@ -135,7 +150,10 @@ const SignUp = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-700 dark:text-gray-300 font-medium">
+                <Label
+                  htmlFor="password"
+                  className="text-gray-700 dark:text-gray-300 font-medium"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -154,13 +172,20 @@ const SignUp = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300 font-medium">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="text-gray-700 dark:text-gray-300 font-medium"
+                >
                   Confirm Password
                 </Label>
                 <div className="relative">
@@ -176,10 +201,16 @@ const SignUp = () => {
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                   >
-                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -196,7 +227,10 @@ const SignUp = () => {
             <div className="mt-6 text-center">
               <p className="text-gray-600 dark:text-gray-300">
                 Already have an account?{" "}
-                <Link to="/signin" className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+                <Link
+                  to="/signin"
+                  className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                >
                   Sign in
                 </Link>
               </p>
