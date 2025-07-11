@@ -130,7 +130,8 @@ router.put('/:id', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
     const { id } = req.params;
-    const { name, customData } = req.body;
+    const {  customData } = req.body;
+    const name = customData.businessName;
 
     // Check if project exists and belongs to user
     const existingProject = await prisma.project.findFirst({
