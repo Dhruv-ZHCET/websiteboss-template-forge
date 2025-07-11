@@ -1,32 +1,25 @@
 
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs-extra');
-const { v4: uuidv4 } = require('uuid');
+const { v2: cloudinary } = require('cloudinary');
 const { PrismaClient } = require('@prisma/client');
 const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../uploads');
-    await fs.ensureDir(uploadDir);
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`;
-    cb(null, uniqueName);
-  }
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Configure multer for memory storage (we'll upload to Cloudinary directly)
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024 // 5MB default
+    fileSize: 5 * 1024 * 1024 // 5MB limit
   },
   fileFilter: (req, file, cb) => {
     // Allow images only
@@ -38,7 +31,7 @@ const upload = multer({
   }
 });
 
-// Upload image
+// Upload image to Cloudinary
 router.post('/image', authenticateToken, (req, res) => {
   upload.single('image')(req, res, async (err) => {
     if (err) {
@@ -55,35 +48,52 @@ router.post('/image', authenticateToken, (req, res) => {
     }
 
     try {
-      // Save upload record to database
-      const uploadRecord = await prisma.upload.create({
-        data: {
-          filename: req.file.filename,
-          originalName: req.file.originalname,
-          mimetype: req.file.mimetype,
-          size: req.file.size,
-          path: req.file.path,
-          userId: req.user.userId
+      // Upload to Cloudinary
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: 'image',
+          folder: 'websiteboss',
+          public_id: `user_${req.user.userId}_${Date.now()}`,
+        },
+        async (error, result) => {
+          if (error) {
+            console.error('Cloudinary upload error:', error);
+            return res.status(500).json({ message: 'Failed to upload image' });
+          }
+
+          try {
+            // Save upload record to database
+            const uploadRecord = await prisma.upload.create({
+              data: {
+                filename: result.public_id,
+                originalName: req.file.originalname,
+                mimetype: req.file.mimetype,
+                size: req.file.size,
+                path: result.secure_url,
+                userId: req.user.userId
+              }
+            });
+
+            res.json({
+              id: uploadRecord.id,
+              filename: result.public_id,
+              originalName: req.file.originalname,
+              url: result.secure_url,
+              size: req.file.size
+            });
+          } catch (dbError) {
+            console.error('Database save error:', dbError);
+            res.status(500).json({ message: 'Failed to save upload record' });
+          }
         }
-      });
+      );
 
-      // Return the file URL
-      const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+      // Pipe the file buffer to Cloudinary
+      uploadStream.end(req.file.buffer);
 
-      res.json({
-        id: uploadRecord.id,
-        filename: req.file.filename,
-        originalName: req.file.originalname,
-        url: fileUrl,
-        size: req.file.size
-      });
     } catch (error) {
       console.error('Upload error:', error);
-      
-      // Clean up the uploaded file if database save fails
-      fs.remove(req.file.path).catch(console.error);
-      
-      res.status(500).json({ message: 'Failed to save upload record' });
+      res.status(500).json({ message: 'Failed to upload image' });
     }
   });
 });
@@ -101,6 +111,7 @@ router.get('/', authenticateToken, async (req, res) => {
         originalName: true,
         mimetype: true,
         size: true,
+        path: true,
         createdAt: true
       },
       orderBy: {
@@ -108,10 +119,10 @@ router.get('/', authenticateToken, async (req, res) => {
       }
     });
 
-    // Add URLs to uploads
+    // URLs are already full Cloudinary URLs
     const uploadsWithUrls = uploads.map(upload => ({
       ...upload,
-      url: `${req.protocol}://${req.get('host')}/uploads/${upload.filename}`
+      url: upload.path
     }));
 
     res.json(uploadsWithUrls);
@@ -136,8 +147,13 @@ router.delete('/:id', authenticateToken, async (req, res) => {
       return res.status(404).json({ message: 'Upload not found' });
     }
 
-    // Delete file from filesystem
-    await fs.remove(upload.path).catch(console.error);
+    // Delete from Cloudinary
+    try {
+      await cloudinary.uploader.destroy(upload.filename);
+    } catch (cloudinaryError) {
+      console.error('Cloudinary delete error:', cloudinaryError);
+      // Continue with database deletion even if Cloudinary deletion fails
+    }
 
     // Delete record from database
     await prisma.upload.delete({

@@ -32,5 +32,21 @@ export const templateService = {
     }
 
     return response.json();
+  },
+
+  async generatePreview(template: any, customData: any) {
+    const response = await fetch(`${API_BASE_URL}/generate-preview`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ template, customData }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to generate preview');
+    }
+
+    return response.json();
   }
 };

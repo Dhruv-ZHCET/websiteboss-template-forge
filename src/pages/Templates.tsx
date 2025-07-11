@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Globe, Eye } from "lucide-react";
@@ -18,6 +18,7 @@ const Templates = () => {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedIndustry, setSelectedIndustry] = useState<string>("all");
+  const navigate = useNavigate();
 
   const industries = [
     { value: "all", label: "All Industries" },
@@ -44,6 +45,15 @@ const Templates = () => {
   const filteredTemplates = selectedIndustry === "all" 
     ? templates 
     : templates.filter(template => template.industry.toLowerCase() === selectedIndustry);
+
+  const handleUseTemplate = (templateId: string) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/signin');
+      return;
+    }
+    navigate(`/editor/${templateId}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -129,10 +139,11 @@ const Templates = () => {
                 <CardContent>
                   <p className="text-gray-600 mb-4">{template.description}</p>
                   <div className="flex space-x-2">
-                    <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
-                      <Link to="/signup" className="w-full">
-                        Use Template
-                      </Link>
+                    <Button 
+                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                      onClick={() => handleUseTemplate(template.id)}
+                    >
+                      Use Template
                     </Button>
                     <Button variant="outline" size="icon">
                       <Eye className="h-4 w-4" />
