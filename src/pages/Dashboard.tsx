@@ -7,6 +7,7 @@ import { Globe, LogOut, Plus, Eye, Download, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { templateService } from "@/services/templateService";
 import { projectService } from "@/services/projectService";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface Template {
   id: string;
@@ -101,27 +102,28 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
+          <p className="text-gray-600 dark:text-gray-300">Loading your dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-2">
               <Globe className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">WebsiteBoss</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">WebsiteBoss</span>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-700">Welcome, {user?.name}</span>
+              <ThemeToggle />
+              <span className="text-gray-700 dark:text-gray-300">Welcome, {user?.name}</span>
               <Button
                 onClick={handleLogout}
                 variant="outline"
@@ -138,30 +140,30 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-          <p className="text-gray-600">Manage your website projects and choose from our professional templates.</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-300">Manage your website projects and choose from our professional templates.</p>
         </div>
 
         {/* Projects Section */}
         <div className="mb-12">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Your Projects</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Projects</h2>
           </div>
           
           {projects.length === 0 ? (
-            <Card className="p-8 text-center">
+            <Card className="p-8 text-center dark:bg-gray-800">
               <CardContent>
-                <p className="text-gray-600 mb-4">You haven't created any projects yet.</p>
-                <p className="text-gray-500">Choose a template below to get started.</p>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">You haven't created any projects yet.</p>
+                <p className="text-gray-500 dark:text-gray-400">Choose a template below to get started.</p>
               </CardContent>
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
-                <Card key={project.id} className="hover:shadow-lg transition-shadow duration-300">
+                <Card key={project.id} className="hover:shadow-lg transition-shadow duration-300 dark:bg-gray-800">
                   <CardHeader>
-                    <CardTitle className="text-lg">{project.name}</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-lg dark:text-white">{project.name}</CardTitle>
+                    <CardDescription className="dark:text-gray-300">
                       {project.template_name} • {project.industry}
                     </CardDescription>
                   </CardHeader>
@@ -202,12 +204,12 @@ const Dashboard = () => {
         {/* Templates Section */}
         <div>
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Choose a Template</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Choose a Template</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {templates.map((template) => (
-              <Card key={template.id} className="hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick={() => handleTemplateSelect(template)}>
+              <Card key={template.id} className="hover:shadow-lg transition-shadow duration-300 cursor-pointer dark:bg-gray-800" onClick={() => handleTemplateSelect(template)}>
                 <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg flex items-center justify-center">
                   <img
                     src={template.preview_image || '/placeholder.svg'}
@@ -216,13 +218,13 @@ const Dashboard = () => {
                   />
                 </div>
                 <CardHeader>
-                  <CardTitle className="text-lg">{template.name}</CardTitle>
-                  <CardDescription className="text-sm text-blue-600 font-medium">
+                  <CardTitle className="text-lg dark:text-white">{template.name}</CardTitle>
+                  <CardDescription className="text-sm text-blue-600 dark:text-blue-400 font-medium">
                     {template.industry}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 text-sm mb-4">{template.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{template.description}</p>
                   <Button className="w-full flex items-center justify-center space-x-2">
                     <Plus className="h-4 w-4" />
                     <span>Use This Template</span>

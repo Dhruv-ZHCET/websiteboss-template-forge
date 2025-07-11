@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Globe, Eye } from "lucide-react";
 import { templateService } from "@/services/templateService";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface Template {
   id: string;
@@ -56,18 +57,19 @@ const Templates = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <Link to="/" className="flex items-center space-x-2">
               <Globe className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">WebsiteBoss</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">WebsiteBoss</span>
             </Link>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <Link to="/signin">
-                <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
+                <Button variant="ghost" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
                   Sign In
                 </Button>
               </Link>
@@ -84,10 +86,10 @@ const Templates = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Professional Website Templates
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Choose from our collection of industry-specific templates designed to help your business stand out online.
           </p>
         </div>
@@ -116,7 +118,7 @@ const Templates = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredTemplates.map((template) => (
-              <Card key={template.id} className="hover:shadow-xl transition-shadow duration-300">
+              <Card key={template.id} className="hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
                 <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg overflow-hidden">
                   <img
                     src={template.preview_image || '/placeholder.svg'}
@@ -127,17 +129,17 @@ const Templates = () => {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="text-xl font-bold text-gray-900">
+                      <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
                         {template.name}
                       </CardTitle>
-                      <CardDescription className="text-blue-600 font-medium mt-1">
+                      <CardDescription className="text-blue-600 dark:text-blue-400 font-medium mt-1">
                         {template.industry}
                       </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">{template.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">{template.description}</p>
                   <div className="flex space-x-2">
                     <Button 
                       className="flex-1 bg-blue-600 hover:bg-blue-700"
@@ -157,7 +159,7 @@ const Templates = () => {
 
         {filteredTemplates.length === 0 && !isLoading && (
           <div className="text-center py-12">
-            <p className="text-gray-600">No templates found for the selected industry.</p>
+            <p className="text-gray-600 dark:text-gray-300">No templates found for the selected industry.</p>
           </div>
         )}
       </div>

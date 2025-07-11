@@ -6,6 +6,7 @@ import { ArrowLeft, Download, Edit } from "lucide-react";
 import { projectService } from "@/services/projectService";
 import { templateService } from "@/services/templateService";
 import { useToast } from "@/hooks/use-toast";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const Preview = () => {
   const { projectId } = useParams();
@@ -86,19 +87,19 @@ const Preview = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading preview...</p>
+          <p className="text-gray-600 dark:text-gray-300">Loading preview...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <Button
@@ -111,6 +112,7 @@ const Preview = () => {
             </Button>
             
             <div className="flex items-center space-x-2">
+              <ThemeToggle />
               {projectId !== 'new' && (
                 <>
                   <Button
@@ -134,14 +136,14 @@ const Preview = () => {
       {/* Preview Frame */}
       <div className="p-4">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="bg-gray-200 px-4 py-2 flex items-center space-x-2">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-gray-200 dark:bg-gray-700 px-4 py-2 flex items-center space-x-2">
               <div className="flex space-x-1">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
               </div>
-              <div className="flex-1 bg-white rounded px-3 py-1 text-sm text-gray-600">
+              <div className="flex-1 bg-white dark:bg-gray-600 rounded px-3 py-1 text-sm text-gray-600 dark:text-gray-300">
                 Preview - Your Website
               </div>
             </div>

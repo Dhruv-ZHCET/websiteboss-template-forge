@@ -11,6 +11,7 @@ import { Globe, ArrowLeft, Save, Download, Eye, Plus, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { templateService } from "@/services/templateService";
 import { projectService } from "@/services/projectService";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const TemplateEditor = () => {
   const { templateId, projectId } = useParams();
@@ -192,10 +193,10 @@ const TemplateEditor = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading template...</p>
+          <p className="text-gray-600 dark:text-gray-300">Loading template...</p>
         </div>
       </div>
     );
@@ -203,9 +204,9 @@ const TemplateEditor = () => {
 
   if (!template) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Template not found.</p>
+          <p className="text-gray-600 dark:text-gray-300">Template not found.</p>
           <Button onClick={() => navigate('/dashboard')} className="mt-4">
             Back to Dashboard
           </Button>
@@ -215,9 +216,9 @@ const TemplateEditor = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
@@ -231,13 +232,14 @@ const TemplateEditor = () => {
               </Button>
               <div className="flex items-center space-x-2">
                 <Globe className="h-6 w-6 text-blue-600" />
-                <span className="text-xl font-bold text-gray-900">WebsiteBoss</span>
+                <span className="text-xl font-bold text-gray-900 dark:text-white">WebsiteBoss</span>
               </div>
               <span className="text-gray-500">•</span>
-              <span className="text-gray-700">{template.name}</span>
+              <span className="text-gray-700 dark:text-gray-300">{template.name}</span>
             </div>
             
             <div className="flex items-center space-x-2">
+              <ThemeToggle />
               <Button variant="outline" onClick={handlePreview}>
                 <Eye className="h-4 w-4 mr-2" />
                 Preview
@@ -267,14 +269,14 @@ const TemplateEditor = () => {
           </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
-            <Card>
+            <Card className="dark:bg-gray-800">
               <CardHeader>
-                <CardTitle>Business Information</CardTitle>
+                <CardTitle className="dark:text-white">Business Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="businessName">Business Name</Label>
+                    <Label htmlFor="businessName" className="dark:text-gray-300">Business Name</Label>
                     <Input
                       id="businessName"
                       value={customData.businessName}
@@ -283,7 +285,7 @@ const TemplateEditor = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="tagline">Tagline</Label>
+                    <Label htmlFor="tagline" className="dark:text-gray-300">Tagline</Label>
                     <Input
                       id="tagline"
                       value={customData.tagline}
@@ -294,7 +296,7 @@ const TemplateEditor = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description" className="dark:text-gray-300">Description</Label>
                   <Textarea
                     id="description"
                     value={customData.description}
@@ -306,7 +308,7 @@ const TemplateEditor = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="phone" className="dark:text-gray-300">Phone</Label>
                     <Input
                       id="phone"
                       value={customData.phone}
@@ -315,7 +317,7 @@ const TemplateEditor = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" className="dark:text-gray-300">Email</Label>
                     <Input
                       id="email"
                       type="email"
@@ -325,7 +327,7 @@ const TemplateEditor = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="address">Address</Label>
+                    <Label htmlFor="address" className="dark:text-gray-300">Address</Label>
                     <Input
                       id="address"
                       value={customData.address}
@@ -339,14 +341,14 @@ const TemplateEditor = () => {
           </TabsContent>
 
           <TabsContent value="design" className="space-y-6">
-            <Card>
+            <Card className="dark:bg-gray-800">
               <CardHeader>
-                <CardTitle>Design & Images</CardTitle>
+                <CardTitle className="dark:text-white">Design & Images</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label>Logo</Label>
+                    <Label className="dark:text-gray-300">Logo</Label>
                     <div className="mt-2 space-y-2">
                       {customData.logo && (
                         <img src={customData.logo} alt="Logo" className="w-32 h-20 object-cover rounded border" />
@@ -363,7 +365,7 @@ const TemplateEditor = () => {
                   </div>
                   
                   <div>
-                    <Label>Hero Image</Label>
+                    <Label className="dark:text-gray-300">Hero Image</Label>
                     <div className="mt-2 space-y-2">
                       {customData.heroImage && (
                         <img src={customData.heroImage} alt="Hero" className="w-full h-32 object-cover rounded border" />
@@ -382,7 +384,7 @@ const TemplateEditor = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="primaryColor">Primary Color</Label>
+                    <Label htmlFor="primaryColor" className="dark:text-gray-300">Primary Color</Label>
                     <Input
                       id="primaryColor"
                       type="color"
@@ -391,7 +393,7 @@ const TemplateEditor = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="secondaryColor">Secondary Color</Label>
+                    <Label htmlFor="secondaryColor" className="dark:text-gray-300">Secondary Color</Label>
                     <Input
                       id="secondaryColor"
                       type="color"
@@ -406,10 +408,10 @@ const TemplateEditor = () => {
 
           <TabsContent value="content" className="space-y-6">
             {true && (
-              <Card>
+              <Card className="dark:bg-gray-800">
                 <CardHeader>
                   <div className="flex justify-between items-center">
-                    <CardTitle>Products</CardTitle>
+                    <CardTitle className="dark:text-white">Products</CardTitle>
                     <Button onClick={addProduct} size="sm">
                       <Plus className="h-4 w-4 mr-2" />
                       Add Product
@@ -418,9 +420,9 @@ const TemplateEditor = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {customData.products.map((product, index) => (
-                    <div key={index} className="border rounded-lg p-4 space-y-3">
+                    <div key={index} className="border dark:border-gray-600 rounded-lg p-4 space-y-3">
                       <div className="flex justify-between items-center">
-                        <h4 className="font-medium">Product {index + 1}</h4>
+                        <h4 className="font-medium dark:text-white">Product {index + 1}</h4>
                         <Button
                           variant="outline"
                           size="sm"
@@ -448,7 +450,7 @@ const TemplateEditor = () => {
                         rows={2}
                       />
                       <div>
-                        <Label>Product Image</Label>
+                        <Label className="dark:text-gray-300">Product Image</Label>
                         <div className="mt-2 space-y-2">
                           {product.image && (
                             <img src={product.image} alt="Product" className="w-24 h-24 object-cover rounded border" />
@@ -480,10 +482,10 @@ const TemplateEditor = () => {
               </Card>
             )}
 
-            <Card>
+            <Card className="dark:bg-gray-800">
               <CardHeader>
                 <div className="flex justify-between items-center">
-                  <CardTitle>Services</CardTitle>
+                  <CardTitle className="dark:text-white">Services</CardTitle>
                   <Button onClick={addService} size="sm">
                     <Plus className="h-4 w-4 mr-2" />
                     Add Service
@@ -492,9 +494,9 @@ const TemplateEditor = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {customData.services.map((service, index) => (
-                  <div key={index} className="border rounded-lg p-4 space-y-3">
+                  <div key={index} className="border dark:border-gray-600 rounded-lg p-4 space-y-3">
                     <div className="flex justify-between items-center">
-                      <h4 className="font-medium">Service {index + 1}</h4>
+                      <h4 className="font-medium dark:text-white">Service {index + 1}</h4>
                       <Button
                         variant="outline"
                         size="sm"
@@ -521,13 +523,13 @@ const TemplateEditor = () => {
           </TabsContent>
 
           <TabsContent value="social" className="space-y-6">
-            <Card>
+            <Card className="dark:bg-gray-800">
               <CardHeader>
-                <CardTitle>Social Media Links</CardTitle>
+                <CardTitle className="dark:text-white">Social Media Links</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="facebook">Facebook URL</Label>
+                  <Label htmlFor="facebook" className="dark:text-gray-300">Facebook URL</Label>
                   <Input
                     id="facebook"
                     value={customData.socialMedia.facebook}
@@ -539,7 +541,7 @@ const TemplateEditor = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="instagram">Instagram URL</Label>
+                  <Label htmlFor="instagram" className="dark:text-gray-300">Instagram URL</Label>
                   <Input
                     id="instagram"
                     value={customData.socialMedia.instagram}
@@ -551,7 +553,7 @@ const TemplateEditor = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="twitter">Twitter URL</Label>
+                  <Label htmlFor="twitter" className="dark:text-gray-300">Twitter URL</Label>
                   <Input
                     id="twitter"
                     value={customData.socialMedia.twitter}
