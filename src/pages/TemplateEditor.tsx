@@ -405,7 +405,7 @@ const TemplateEditor = () => {
           </TabsContent>
 
           <TabsContent value="content" className="space-y-6">
-            {template.industry === 'cosmetics' && (
+            {true && (
               <Card>
                 <CardHeader>
                   <div className="flex justify-between items-center">

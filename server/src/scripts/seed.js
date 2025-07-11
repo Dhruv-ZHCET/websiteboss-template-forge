@@ -423,7 +423,7 @@ window.addEventListener('load', () => {
         name: 'MediCare Pro',
         industry: 'pharmacy',
         description: 'Professional template designed for pharmacies, clinics, and healthcare providers.',
-        preview_image: 'https://images.unsplash.com/photo-1576671191785-8e4d6dc46bb1?w=800&h=600&fit=crop',
+        preview_image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         html_content: `<!DOCTYPE html>
 <html lang="en">
 <head>
