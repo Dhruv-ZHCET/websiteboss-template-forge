@@ -4,6 +4,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, Edit } from "lucide-react";
 import { projectService } from "@/services/projectService";
+import { templateService } from "@/services/templateService";
 import { useToast } from "@/hooks/use-toast";
 
 const Preview = () => {
@@ -24,17 +25,31 @@ const Preview = () => {
       if (projectId === 'new' && location.state) {
         // Generate preview from template and custom data
         const { template, customData } = location.state;
-        const response = await fetch('/api/generate-preview', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ template, customData })
-        });
-        const data = await response.json();
-        setHtmlContent(data.html);
+        const previewData = await templateService.generatePreview(template, customData);
+        setHtmlContent(previewData.html);
       } else if (projectId) {
         // Load existing project
         const project = await projectService.getProject(projectId);
-        setHtmlContent(project.html_content || '');
+        
+        // Create complete HTML with inlined CSS and JS
+        const completeHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview</title>
+    <style>
+        ${project.css_content || ''}
+    </style>
+</head>
+<body>
+    ${project.html_content || ''}
+    ${project.js_content ? `<script>${project.js_content}</script>` : ''}
+</body>
+</html>
+        `;
+        setHtmlContent(completeHtml);
       }
     } catch (error) {
       console.error('Failed to load preview:', error);

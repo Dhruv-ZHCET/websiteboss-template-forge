@@ -47,6 +47,27 @@ export const templateService = {
       throw new Error('Failed to generate preview');
     }
 
-    return response.json();
+    const data = await response.json();
+    
+    // Create complete HTML with inlined CSS and JS
+    const completeHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview</title>
+    <style>
+        ${data.css || ''}
+    </style>
+</head>
+<body>
+    ${data.html || ''}
+    ${data.js ? `<script>${data.js}</script>` : ''}
+</body>
+</html>
+    `;
+    
+    return { html: completeHtml };
   }
 };
