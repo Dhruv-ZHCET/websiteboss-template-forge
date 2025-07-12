@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Globe, LogOut, Plus, Eye, Download, Edit } from "lucide-react";
+import { Globe, LogOut, Plus, Eye, Download, Edit, Sparkles, TrendingUp, Clock, Star, ArrowRight, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { templateService } from "@/services/templateService";
 import { projectService } from "@/services/projectService";
@@ -100,37 +99,72 @@ const Dashboard = () => {
     }
   };
 
+  const getTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays}d ago`;
+    return date.toLocaleDateString();
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading your dashboard...</p>
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
+            <Sparkles className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-6 w-6 text-blue-600" />
+          </div>
+          <p className="text-gray-600 dark:text-gray-300 text-lg font-medium">Loading your dashboard...</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">Preparing your workspace ✨</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20">
+      {/* Enhanced Header */}
+      <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl shadow-lg border-b border-white/20 dark:border-gray-700/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-2">
-              <Globe className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900 dark:text-white">WebsiteBoss</span>
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Globe className="h-7 w-7 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                  <Sparkles className="h-3 w-3 text-white" />
+                </div>
+              </div>
+              <div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  WebsiteBoss
+                </span>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Professional Website Builder
+                </div>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
-              <span className="text-gray-700 dark:text-gray-300">Welcome, {user?.name}</span>
+              <div className="hidden sm:flex items-center space-x-3 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full px-4 py-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                  {user?.name?.charAt(0)?.toUpperCase()}
+                </div>
+                <span className="text-gray-700 dark:text-gray-300 font-medium">Welcome, {user?.name}</span>
+              </div>
               <Button
                 onClick={handleLogout}
                 variant="outline"
-                className="flex items-center space-x-2"
+                className="border-2 border-red-200 hover:border-red-300 hover:bg-red-50 dark:border-red-800 dark:hover:border-red-700 dark:hover:bg-red-900/20 transition-all duration-200 rounded-xl"
               >
-                <LogOut className="h-4 w-4" />
-                <span>Logout</span>
+                <LogOut className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Logout</span>
               </Button>
             </div>
           </div>
@@ -138,50 +172,133 @@ const Dashboard = () => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-300">Manage your website projects and choose from our professional templates.</p>
+        {/* Enhanced Welcome Section */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full px-6 py-3 mb-6">
+            <TrendingUp className="h-5 w-5 text-blue-600" />
+            <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">Dashboard</span>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Welcome back, <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{user?.name}</span>!
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            Continue building amazing websites with our professional templates and powerful customization tools.
+          </p>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <Card className="border-0 shadow-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-2xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-blue-100 text-sm font-medium">Total Projects</p>
+                  <p className="text-3xl font-bold">{projects.length}</p>
+                </div>
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Globe className="h-6 w-6" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-2xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-purple-100 text-sm font-medium">Templates Available</p>
+                  <p className="text-3xl font-bold">{templates.length}</p>
+                </div>
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Star className="h-6 w-6" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-xl bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-2xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-green-100 text-sm font-medium">Quick Actions</p>
+                  <p className="text-lg font-semibold">Ready to build</p>
+                </div>
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Zap className="h-6 w-6" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Projects Section */}
-        <div className="mb-12">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Projects</h2>
+        <div className="mb-16">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Your Projects</h2>
+              <p className="text-gray-600 dark:text-gray-300">Manage and continue working on your website projects</p>
+            </div>
           </div>
           
           {projects.length === 0 ? (
-            <Card className="p-8 text-center dark:bg-gray-800">
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">You haven't created any projects yet.</p>
-                <p className="text-gray-500 dark:text-gray-400">Choose a template below to get started.</p>
+            <Card className="border-0 shadow-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl overflow-hidden">
+              <CardContent className="p-12 text-center">
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Plus className="h-12 w-12 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">No projects yet</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md mx-auto">
+                  You haven't created any projects yet. Choose a template below to get started and build your first website.
+                </p>
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 rounded-xl px-8">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Your First Project
+                </Button>
               </CardContent>
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
-                <Card key={project.id} className="hover:shadow-lg transition-shadow duration-300 dark:bg-gray-800">
-                  <CardHeader>
-                    <CardTitle className="text-lg dark:text-white">{project.name}</CardTitle>
+                <Card key={project.id} className="group border-0 shadow-xl hover:shadow-2xl transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl overflow-hidden hover:scale-105">
+                  <CardHeader className="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700/50 dark:to-blue-900/20">
+                    <div className="flex items-center justify-between">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                        <Globe className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+                        <Clock className="h-3 w-3" />
+                        <span>{getTimeAgo(project.updated_at)}</span>
+                      </div>
+                    </div>
+                    <CardTitle className="text-lg dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {project.name}
+                    </CardTitle>
                     <CardDescription className="dark:text-gray-300">
-                      {project.template_name} • {project.industry}
+                      <span className="inline-flex items-center space-x-2">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        <span>{project.template_name}</span>
+                      </span>
+                      <span className="block text-xs mt-1 text-blue-600 dark:text-blue-400 font-medium">
+                        {project.industry}
+                      </span>
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6">
                     <div className="flex space-x-2">
                       <Button
                         size="sm"
                         onClick={() => handleProjectEdit(project)}
-                        className="flex-1 flex items-center justify-center space-x-1"
+                        className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 rounded-xl group"
                       >
-                        <Edit className="h-4 w-4" />
+                        <Edit className="h-4 w-4 mr-2" />
                         <span>Edit</span>
+                        <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleProjectPreview(project)}
-                        className="flex items-center justify-center"
+                        className="border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 dark:border-gray-600 dark:hover:border-blue-500 dark:hover:bg-blue-900/20 transition-all duration-200 rounded-xl"
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -189,7 +306,7 @@ const Dashboard = () => {
                         size="sm"
                         variant="outline"
                         onClick={() => handleProjectDownload(project)}
-                        className="flex items-center justify-center"
+                        className="border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 dark:border-gray-600 dark:hover:border-green-500 dark:hover:bg-green-900/20 transition-all duration-200 rounded-xl"
                       >
                         <Download className="h-4 w-4" />
                       </Button>
@@ -203,36 +320,60 @@ const Dashboard = () => {
 
         {/* Templates Section */}
         <div>
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Choose a Template</h2>
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Choose a Template</h2>
+              <p className="text-gray-600 dark:text-gray-300">Start a new project with our professional templates</p>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {templates.map((template) => (
-              <Card key={template.id} className="hover:shadow-lg transition-shadow duration-300 cursor-pointer dark:bg-gray-800" onClick={() => handleTemplateSelect(template)}>
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg flex items-center justify-center">
+            {templates.slice(0, 6).map((template) => (
+              <Card key={template.id} className="group border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl overflow-hidden hover:scale-105" onClick={() => handleTemplateSelect(template)}>
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-t-2xl flex items-center justify-center overflow-hidden">
                   <img
                     src={template.preview_image || '/placeholder.svg'}
                     alt={template.name}
-                    className="w-full h-full object-cover rounded-t-lg"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
                 <CardHeader>
-                  <CardTitle className="text-lg dark:text-white">{template.name}</CardTitle>
-                  <CardDescription className="text-sm text-blue-600 dark:text-blue-400 font-medium">
-                    {template.industry}
-                  </CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                      <Sparkles className="h-4 w-4 text-white" />
+                    </div>
+                    <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded-full">
+                      {template.industry}
+                    </span>
+                  </div>
+                  <CardTitle className="text-lg dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {template.name}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{template.description}</p>
-                  <Button className="w-full flex items-center justify-center space-x-2">
-                    <Plus className="h-4 w-4" />
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed">{template.description}</p>
+                  <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 rounded-xl group">
+                    <Plus className="h-4 w-4 mr-2" />
                     <span>Use This Template</span>
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </CardContent>
               </Card>
             ))}
           </div>
+
+          {templates.length > 6 && (
+            <div className="text-center mt-8">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/templates')}
+                className="border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50 dark:border-blue-800 dark:hover:border-blue-600 dark:hover:bg-blue-900/20 transition-all duration-200 rounded-xl px-8"
+              >
+                View All Templates
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
