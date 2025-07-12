@@ -93,7 +93,7 @@ const SignIn = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
                 <CheckCircle className="h-5 w-5 text-white" />
               </div>
-              <span>Access to 50+ professional templates</span>
+              <span>Access to industry-specific templates,</span>
             </div>
             <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">

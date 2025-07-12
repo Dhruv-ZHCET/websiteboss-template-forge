@@ -84,10 +84,10 @@ const SignUp = () => {
   };
 
   const benefits = [
-    "50+ Professional Templates",
+    "Industry-specific templates,",
     "Unlimited Customization",
     "Clean Code Export",
-    "24/7 Support"
+    "Preview their site"
   ];
 
   return (

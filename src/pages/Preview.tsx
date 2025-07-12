@@ -7,6 +7,7 @@ import { projectService } from "@/services/projectService";
 import { templateService } from "@/services/templateService";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Navbar } from "@/components/Navbar";
 
 const Preview = () => {
   const { projectId } = useParams();
@@ -99,39 +100,7 @@ const Preview = () => {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <Button
-              variant="ghost"
-              onClick={() => navigate(-1)}
-              className="flex items-center space-x-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back</span>
-            </Button>
-            
-            <div className="flex items-center space-x-2">
-              <ThemeToggle />
-              {projectId !== 'new' && (
-                <>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate(`/editor/project/${projectId}`)}
-                  >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
-                  </Button>
-                  <Button onClick={handleDownload}>
-                    <Download className="h-4 w-4 mr-2" />
-                    Download
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+    <Navbar/>
 
       {/* Preview Frame */}
       <div className="p-4">
