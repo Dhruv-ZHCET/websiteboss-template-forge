@@ -27,11 +27,92 @@
             font-size: 2.5em;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
-        .architecture-diagram {
+        .team-info {
+            text-align: center;
+            background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #2196f3;
+        }
+        .team-info h2 {
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+        .team-info p {
+            color: #0d47a1;
+            margin: 5px 0;
+            font-weight: 500;
+        }
+        .architecture-flow {
+            background: linear-gradient(145deg, #f0f8ff, #e6f3ff);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid #4fc3f7;
+        }
+        .architecture-flow h2 {
+            text-align: center;
+            color: #01579b;
+            margin-bottom: 30px;
+        }
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .flow-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .flow-box {
+            background: white;
+            border: 3px solid #2196f3;
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .flow-box.user { border-color: #4caf50; background: linear-gradient(145deg, #e8f5e8, #c8e6c9); }
+        .flow-box.frontend { border-color: #2196f3; background: linear-gradient(145deg, #e3f2fd, #bbdefb); }
+        .flow-box.backend { border-color: #ff9800; background: linear-gradient(145deg, #fff3e0, #ffe0b2); }
+        .flow-box.database { border-color: #9c27b0; background: linear-gradient(145deg, #f3e5f5, #e1bee7); }
+        .flow-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        .flow-box.user h3 { color: #2e7d32; }
+        .flow-box.frontend h3 { color: #1565c0; }
+        .flow-box.backend h3 { color: #ef6c00; }
+        .flow-box.database h3 { color: #7b1fa2; }
+        .flow-box p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .arrow {
+            font-size: 2em;
+            color: #2196f3;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        .arrow.down { transform: rotate(90deg); }
+        .arrow.up { transform: rotate(-90deg); }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        .system-architecture {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 30px;
-            margin-bottom: 40px;
+            margin: 40px 0;
         }
         .layer {
             background: linear-gradient(145deg, #f8f9fa, #e9ecef);
@@ -72,54 +153,52 @@
             font-size: 0.9em;
             line-height: 1.4;
         }
-        .data-flow {
-            margin: 40px 0;
-            text-align: center;
-        }
-        .flow-arrow {
-            display: inline-block;
-            margin: 0 20px;
-            font-size: 2em;
-            color: #007bff;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .external-services {
-            background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+        .data-flow-diagram {
+            background: linear-gradient(145deg, #fff8e1, #ffecb3);
             border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
+            padding: 30px;
+            margin: 30px 0;
             border: 2px solid #ffc107;
         }
-        .external-services h2 {
-            color: #856404;
+        .data-flow-diagram h2 {
+            color: #f57f17;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        .process-flow {
+            display: flex;
+            flex-direction: column;
             gap: 15px;
         }
-        .service {
+        .process-step {
+            display: flex;
+            align-items: center;
             background: white;
             padding: 15px;
             border-radius: 10px;
-            text-align: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border: 1px solid #ffc107;
+            border-left: 4px solid #ffc107;
         }
-        .service h4 {
-            margin: 0 0 8px 0;
-            color: #856404;
+        .step-number {
+            background: #ffc107;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
         }
-        .service p {
+        .step-content h4 {
+            margin: 0 0 5px 0;
+            color: #f57f17;
+        }
+        .step-content p {
             margin: 0;
-            color: #6c757d;
-            font-size: 0.85em;
+            color: #666;
+            font-size: 0.9em;
         }
         .tech-stack {
             background: linear-gradient(145deg, #d1ecf1, #bee5eb);
@@ -169,7 +248,108 @@
     <div class="container">
         <h1>🏗️ WebsiteBoss - High Level Design (HLD)</h1>
         
-        <div class="architecture-diagram">
+        <div class="team-info">
+            <h2>👥 Team: Async Ninjas</h2>
+            <p><strong>Frontend Developer:</strong> Dhruv Singh</p>
+            <p><strong>Backend Developer:</strong> Kuldeep Kumar</p>
+            <p><strong>Project:</strong> WebsiteBoss Platform</p>
+        </div>
+
+        <div class="architecture-flow">
+            <h2>🔄 System Architecture Flow</h2>
+            <div class="flowchart">
+                <!-- User Layer -->
+                <div class="flow-row">
+                    <div class="flow-box user">
+                        <h3>👤 User</h3>
+                        <p>Web Browser<br>Authentication<br>Template Selection</p>
+                    </div>
+                </div>
+                
+                <div class="arrow down">↓</div>
+                
+                <!-- Frontend Layer -->
+                <div class="flow-row">
+                    <div class="flow-box frontend">
+                        <h3>🎨 Frontend Layer</h3>
+                        <p>React SPA<br>UI Components<br>State Management</p>
+                    </div>
+                </div>
+                
+                <div class="arrow down">↓</div>
+                
+                <!-- API Communication -->
+                <div class="flow-row">
+                    <div class="flow-box">
+                        <h3>🌐 API Gateway</h3>
+                        <p>RESTful APIs<br>JWT Authentication<br>Request/Response</p>
+                    </div>
+                </div>
+                
+                <div class="arrow down">↓</div>
+                
+                <!-- Backend Layer -->
+                <div class="flow-row">
+                    <div class="flow-box backend">
+                        <h3>⚙️ Backend Layer</h3>
+                        <p>Express.js Server<br>Business Logic<br>File Processing</p>
+                    </div>
+                </div>
+                
+                <div class="arrow down">↓</div>
+                
+                <!-- Database Layer -->
+                <div class="flow-row">
+                    <div class="flow-box database">
+                        <h3>🗄️ Database Layer</h3>
+                        <p>PostgreSQL<br>Prisma ORM<br>Data Persistence</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-flow-diagram">
+            <h2>📊 Data Flow Process</h2>
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>User Authentication</h4>
+                        <p>User logs in → JWT token generated → Token stored for session management</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Template Selection</h4>
+                        <p>Browse templates → Select industry → Choose template → Load customization interface</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Content Customization</h4>
+                        <p>Upload images → Enter business details → Add products/services → Configure branding</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Code Generation</h4>
+                        <p>Process custom data → Replace template placeholders → Generate HTML/CSS/JS</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Preview & Export</h4>
+                        <p>Real-time preview → Test responsiveness → Download ZIP package</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="system-architecture">
             <!-- Frontend Layer -->
             <div class="layer">
                 <h2>🎨 Frontend Layer</h2>
@@ -238,41 +418,6 @@
                 <div class="component">
                     <h3>Data Security</h3>
                     <p>Encrypted passwords, SQL injection prevention, Data validation</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="data-flow">
-            <h2>📊 Data Flow Architecture</h2>
-            <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; margin: 20px 0;">
-                <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin: 10px;">User Interface</div>
-                <span class="flow-arrow">→</span>
-                <div style="background: #f3e5f5; padding: 15px; border-radius: 10px; margin: 10px;">API Gateway</div>
-                <span class="flow-arrow">→</span>
-                <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 10px;">Business Logic</div>
-                <span class="flow-arrow">→</span>
-                <div style="background: #fff3e0; padding: 15px; border-radius: 10px; margin: 10px;">Database</div>
-            </div>
-        </div>
-
-        <div class="external-services">
-            <h2>🌐 External Services Integration</h2>
-            <div class="services-grid">
-                <div class="service">
-                    <h4>Cloudinary</h4>
-                    <p>Image upload, storage, and optimization service</p>
-                </div>
-                <div class="service">
-                    <h4>JWT Authentication</h4>
-                    <p>Secure token-based authentication system</p>
-                </div>
-                <div class="service">
-                    <h4>File System</h4>
-                    <p>Temporary file storage for ZIP generation</p>
-                </div>
-                <div class="service">
-                    <h4>Email Service</h4>
-                    <p>User notifications and communication (Future)</p>
                 </div>
             </div>
         </div>
