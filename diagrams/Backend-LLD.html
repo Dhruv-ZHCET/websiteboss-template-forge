@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebsiteBoss - Backend Low Level Design (LLD)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .backend-structure {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .section {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+        }
+        .section h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.4em;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .api-endpoint {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #28a745;
+        }
+        .api-endpoint.post { border-left-color: #007bff; }
+        .api-endpoint.put { border-left-color: #ffc107; }
+        .api-endpoint.delete { border-left-color: #dc3545; }
+        .api-endpoint h4 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 10px;
+            color: white;
+        }
+        .method.get { background: #28a745; }
+        .method.post { background: #007bff; }
+        .method.put { background: #ffc107; color: #000; }
+        .method.delete { background: #dc3545; }
+        .api-endpoint p {
+            margin: 5px 0 0 0;
+            color: #6c757d;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        .database-section {
+            background: linear-gradient(145deg, #e8f4fd, #d1ecf1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #17a2b8;
+            grid-column: 1 / -1;
+        }
+        .database-section h2 {
+            color: #0c5460;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .schema-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .table-schema {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #17a2b8;
+        }
+        .table-schema h3 {
+            color: #0c5460;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #17a2b8;
+            padding-bottom: 8px;
+        }
+        .field {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.9em;
+        }
+        .field:last-child {
+            border-bottom: none;
+        }
+        .field-name {
+            font-weight: 600;
+            color: #495057;
+        }
+        .field-type {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .middleware-section {
+            background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #ffc107;
+        }
+        .middleware-section h2 {
+            color: #856404;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .middleware-flow {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .middleware-box {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 10px;
+            text-align: center;
+            min-width: 120px;
+            border: 2px solid #ffc107;
+        }
+        .middleware-box h4 {
+            margin: 0 0 8px 0;
+            color: #856404;
+            font-size: 0.9em;
+        }
+        .middleware-box p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.8em;
+        }
+        .arrow {
+            font-size: 1.5em;
+            color: #ffc107;
+            margin: 0 10px;
+        }
+        .utils-section {
+            background: linear-gradient(145deg, #d4edda, #c3e6cb);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #28a745;
+        }
+        .utils-section h2 {
+            color: #155724;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .utils-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .util-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #28a745;
+        }
+        .util-card h3 {
+            color: #155724;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #28a745;
+            padding-bottom: 8px;
+        }
+        .util-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .util-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+            position: relative;
+            padding-left: 20px;
+            font-size: 0.9em;
+        }
+        .util-card li:before {
+            content: "⚙️";
+            position: absolute;
+            left: 0;
+        }
+        .util-card li:last-child {
+            border-bottom: none;
+        }
+        .security-section {
+            background: linear-gradient(145deg, #f8d7da, #f5c6cb);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #dc3545;
+        }
+        .security-section h2 {
+            color: #721c24;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .security-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #dc3545;
+        }
+        .security-card h4 {
+            color: #721c24;
+            margin: 0 0 10px 0;
+            font-size: 1em;
+        }
+        .security-card p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #495057;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ WebsiteBoss - Backend Low Level Design (LLD)</h1>
+        
+        <div class="backend-structure">
+            <!-- Authentication Routes -->
+            <div class="section">
+                <h2>🔐 Authentication Routes (/api/auth)</h2>
+                
+                <div class="api-endpoint post">
+                    <h4><span class="method post">POST</span>/signup</h4>
+                    <p><strong>Body:</strong> { name, email, password }</p>
+                    <p><strong>Response:</strong> { token, user }</p>
+                    <p>Creates new user account with hashed password</p>
+                </div>
+
+                <div class="api-endpoint post">
+                    <h4><span class="method post">POST</span>/signin</h4>
+                    <p><strong>Body:</strong> { email, password }</p>
+                    <p><strong>Response:</strong> { token, user }</p>
+                    <p>Authenticates user and returns JWT token</p>
+                </div>
+
+                <div class="code-block">
+// Password hashing with bcryptjs
+const hashedPassword = await bcrypt.hash(password, 12);
+
+// JWT token generation
+const token = jwt.sign(
+  { userId: user.id, email: user.email },
+  process.env.JWT_SECRET,
+  { expiresIn: '7d' }
+);
+                </div>
+            </div>
+
+            <!-- Template Routes -->
+            <div class="section">
+                <h2>📄 Template Routes (/api/templates)</h2>
+                
+                <div class="api-endpoint">
+                    <h4><span class="method get">GET</span>/</h4>
+                    <p><strong>Query:</strong> ?industry=cosmetics (optional)</p>
+                    <p><strong>Response:</strong> Array of template objects</p>
+                    <p>Retrieves all templates or filtered by industry</p>
+                </div>
+
+                <div class="api-endpoint">
+                    <h4><span class="method get">GET</span>/:id</h4>
+                    <p><strong>Params:</strong> Template ID</p>
+                    <p><strong>Response:</strong> Complete template object</p>
+                    <p>Retrieves specific template with HTML/CSS/JS content</p>
+                </div>
+
+                <div class="code-block">
+// Template selection with industry filter
+const where = industry ? { industry } : {};
+const templates = await prisma.template.findMany({
+  where,
+  select: {
+    id: true, name: true, industry: true,
+    description: true, preview_image: true
+  }
+});
+                </div>
+            </div>
+
+            <!-- Project Routes -->
+            <div class="section">
+                <h2>📁 Project Routes (/api/projects)</h2>
+                
+                <div class="api-endpoint">
+                    <h4><span class="method get">GET</span>/ 🔒</h4>
+                    <p><strong>Auth:</strong> Bearer token required</p>
+                    <p><strong>Response:</strong> User's projects array</p>
+                    <p>Retrieves all projects for authenticated user</p>
+                </div>
+
+                <div class="api-endpoint post">
+                    <h4><span class="method post">POST</span>/ 🔒</h4>
+                    <p><strong>Body:</strong> { templateId, name, customData }</p>
+                    <p><strong>Response:</strong> Created project object</p>
+                    <p>Creates new project from template</p>
+                </div>
+
+                <div class="api-endpoint">
+                    <h4><span class="method get">GET</span>/:id 🔒</h4>
+                    <p><strong>Params:</strong> Project ID</p>
+                    <p><strong>Response:</strong> Complete project with template</p>
+                    <p>Retrieves specific project for editing</p>
+                </div>
+
+                <div class="api-endpoint put">
+                    <h4><span class="method put">PUT</span>/:id 🔒</h4>
+                    <p><strong>Body:</strong> { customData }</p>
+                    <p><strong>Response:</strong> Updated project object</p>
+                    <p>Updates project with new customization data</p>
+                </div>
+
+                <div class="api-endpoint">
+                    <h4><span class="method get">GET</span>/:id/download 🔒</h4>
+                    <p><strong>Response:</strong> ZIP file stream</p>
+                    <p>Downloads complete website files as ZIP</p>
+                </div>
+
+                <div class="api-endpoint delete">
+                    <h4><span class="method delete">DELETE</span>/:id 🔒</h4>
+                    <p><strong>Response:</strong> Success message</p>
+                    <p>Deletes project permanently</p>
+                </div>
+            </div>
+
+            <!-- Upload Routes -->
+            <div class="section">
+                <h2>📤 Upload Routes (/api/upload)</h2>
+                
+                <div class="api-endpoint post">
+                    <h4><span class="method post">POST</span>/image 🔒</h4>
+                    <p><strong>Body:</strong> FormData with image file</p>
+                    <p><strong>Response:</strong> { id, url, filename }</p>
+                    <p>Uploads image to Cloudinary, saves record</p>
+                </div>
+
+                <div class="api-endpoint">
+                    <h4><span class="method get">GET</span>/ 🔒</h4>
+                    <p><strong>Response:</strong> User's uploaded files array</p>
+                    <p>Retrieves all uploads for authenticated user</p>
+                </div>
+
+                <div class="api-endpoint delete">
+                    <h4><span class="method delete">DELETE</span>/:id 🔒</h4>
+                    <p><strong>Response:</strong> Success message</p>
+                    <p>Deletes upload from Cloudinary and database</p>
+                </div>
+
+                <div class="code-block">
+// Cloudinary upload configuration
+const uploadStream = cloudinary.uploader.upload_stream({
+  resource_type: 'image',
+  folder: 'websiteboss',
+  public_id: `user_${userId}_${Date.now()}`
+}, callback);
+                </div>
+            </div>
+        </div>
+
+        <div class="database-section">
+            <h2>🗄️ Database Schema (PostgreSQL + Prisma)</h2>
+            <div class="schema-grid">
+                <div class="table-schema">
+                    <h3>👤 Users Table</h3>
+                    <div class="field">
+                        <span class="field-name">id</span>
+                        <span class="field-type">String (CUID)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">email</span>
+                        <span class="field-type">String (Unique)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">name</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">password</span>
+                        <span class="field-type">String (Hashed)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">created_at</span>
+                        <span class="field-type">DateTime</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">updated_at</span>
+                        <span class="field-type">DateTime</span>
+                    </div>
+                </div>
+
+                <div class="table-schema">
+                    <h3>📄 Templates Table</h3>
+                    <div class="field">
+                        <span class="field-name">id</span>
+                        <span class="field-type">String (CUID)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">name</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">industry</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">description</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">preview_image</span>
+                        <span class="field-type">String (URL)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">html_content</span>
+                        <span class="field-type">Text</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">css_content</span>
+                        <span class="field-type">Text</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">js_content</span>
+                        <span class="field-type">Text (Optional)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">fields</span>
+                        <span class="field-type">JSON</span>
+                    </div>
+                </div>
+
+                <div class="table-schema">
+                    <h3>📁 Projects Table</h3>
+                    <div class="field">
+                        <span class="field-name">id</span>
+                        <span class="field-type">String (CUID)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">name</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">user_id</span>
+                        <span class="field-type">String (FK)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">template_id</span>
+                        <span class="field-type">String (FK)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">custom_data</span>
+                        <span class="field-type">JSON</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">html_content</span>
+                        <span class="field-type">Text (Generated)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">css_content</span>
+                        <span class="field-type">Text (Generated)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">js_content</span>
+                        <span class="field-type">Text (Generated)</span>
+                    </div>
+                </div>
+
+                <div class="table-schema">
+                    <h3>📤 Uploads Table</h3>
+                    <div class="field">
+                        <span class="field-name">id</span>
+                        <span class="field-type">String (CUID)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">filename</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">original_name</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">mimetype</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">size</span>
+                        <span class="field-type">Integer</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">path</span>
+                        <span class="field-type">String (URL)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">user_id</span>
+                        <span class="field-type">String (FK)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="middleware-section">
+            <h2>🛡️ Middleware Pipeline</h2>
+            <div class="middleware-flow">
+                <div class="middleware-box">
+                    <h4>CORS</h4>
+                    <p>Cross-origin request handling</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="middleware-box">
+                    <h4>Body Parser</h4>
+                    <p>JSON/URL-encoded parsing</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="middleware-box">
+                    <h4>Auth Check</h4>
+                    <p>JWT token validation</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="middleware-box">
+                    <h4>Route Handler</h4>
+                    <p>Business logic execution</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="middleware-box">
+                    <h4>Error Handler</h4>
+                    <p>Error processing & response</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+// JWT Authentication Middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ message: 'Access token required' });
+  }
+  
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+};
+            </div>
+        </div>
+
+        <div class="utils-section">
+            <h2>🔧 Utility Functions & Services</h2>
+            <div class="utils-grid">
+                <div class="util-card">
+                    <h3>Code Generator (codeGenerator.js)</h3>
+                    <ul>
+                        <li>generateWebsiteCode(template, customData)</li>
+                        <li>Replace placeholders in HTML/CSS/JS</li>
+                        <li>Process custom colors and branding</li>
+                        <li>Generate product/service listings</li>
+                        <li>Handle social media links</li>
+                        <li>Clean up unused placeholders</li>
+                    </ul>
+                </div>
+                <div class="util-card">
+                    <h3>File Processing</h3>
+                    <ul>
+                        <li>Multer configuration for uploads</li>
+                        <li>Cloudinary integration</li>
+                        <li>ZIP file generation with Archiver</li>
+                        <li>Temporary file management</li>
+                        <li>File validation (type, size)</li>
+                        <li>Cleanup operations</li>
+                    </ul>
+                </div>
+                <div class="util-card">
+                    <h3>Database Operations</h3>
+                    <ul>
+                        <li>Prisma client configuration</li>
+                        <li>Migration management</li>
+                        <li>Seed data scripts</li>
+                        <li>Query optimization</li>
+                        <li>Relationship handling</li>
+                        <li>Transaction management</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-block">
+// Website Code Generation Example
+const generateWebsiteCode = (template, customData) => {
+  let html = template.html_content;
+  let css = template.css_content;
+  
+  // Replace business information
+  if (customData.businessName) {
+    html = html.replace(/{{BUSINESS_NAME}}/g, customData.businessName);
+  }
+  
+  // Replace colors
+  if (customData.primaryColor) {
+    css = css.replace(/{{PRIMARY_COLOR}}/g, customData.primaryColor);
+  }
+  
+  // Generate products HTML
+  if (customData.products) {
+    let productsHtml = customData.products.map(product => `
+      &lt;div class="product-item"&gt;
+        &lt;img src="${product.image}" alt="${product.name}"&gt;
+        &lt;h3&gt;${product.name}&lt;/h3&gt;
+        &lt;p&gt;${product.description}&lt;/p&gt;
+        &lt;span&gt;${product.price}&lt;/span&gt;
+      &lt;/div&gt;
+    `).join('');
+    html = html.replace(/{{PRODUCTS}}/g, productsHtml);
+  }
+  
+  return { html, css, js: template.js_content };
+};
+            </div>
+        </div>
+
+        <div class="security-section">
+            <h2>🔒 Security Implementation</h2>
+            <div class="security-grid">
+                <div class="security-card">
+                    <h4>Password Security</h4>
+                    <p>bcryptjs with 12 salt rounds for password hashing. Passwords never stored in plain text.</p>
+                </div>
+                <div class="security-card">
+                    <h4>JWT Authentication</h4>
+                    <p>7-day token expiration, secure secret key, token validation on protected routes.</p>
+                </div>
+                <div class="security-card">
+                    <h4>Input Validation</h4>
+                    <p>Request body validation, file type checking, size limits, SQL injection prevention.</p>
+                </div>
+                <div class="security-card">
+                    <h4>CORS Protection</h4>
+                    <p>Configured for specific frontend origin, credentials support, proper headers.</p>
+                </div>
+                <div class="security-card">
+                    <h4>Error Handling</h4>
+                    <p>Sanitized error messages, no sensitive data exposure, proper HTTP status codes.</p>
+                </div>
+                <div class="security-card">
+                    <h4>File Upload Security</h4>
+                    <p>File type validation, size limits, secure storage with Cloudinary, virus scanning ready.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

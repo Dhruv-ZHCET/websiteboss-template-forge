@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebsiteBoss - High Level Design (HLD)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .architecture-diagram {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .layer {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+        }
+        .layer h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.4em;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .component {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #007bff;
+            transition: transform 0.2s ease;
+        }
+        .component:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .component h3 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        .component p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        .data-flow {
+            margin: 40px 0;
+            text-align: center;
+        }
+        .flow-arrow {
+            display: inline-block;
+            margin: 0 20px;
+            font-size: 2em;
+            color: #007bff;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .external-services {
+            background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 2px solid #ffc107;
+        }
+        .external-services h2 {
+            color: #856404;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .service {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #ffc107;
+        }
+        .service h4 {
+            margin: 0 0 8px 0;
+            color: #856404;
+        }
+        .service p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.85em;
+        }
+        .tech-stack {
+            background: linear-gradient(145deg, #d1ecf1, #bee5eb);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 2px solid #17a2b8;
+        }
+        .tech-stack h2 {
+            color: #0c5460;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .tech-category {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .tech-category h3 {
+            color: #0c5460;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #17a2b8;
+            padding-bottom: 8px;
+        }
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .tech-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+        .tech-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ WebsiteBoss - High Level Design (HLD)</h1>
+        
+        <div class="architecture-diagram">
+            <!-- Frontend Layer -->
+            <div class="layer">
+                <h2>🎨 Frontend Layer</h2>
+                <div class="component">
+                    <h3>React Application</h3>
+                    <p>Single Page Application with TypeScript, React Router for navigation</p>
+                </div>
+                <div class="component">
+                    <h3>UI Components</h3>
+                    <p>shadcn/ui library with Radix UI primitives, Tailwind CSS styling</p>
+                </div>
+                <div class="component">
+                    <h3>State Management</h3>
+                    <p>React hooks, Context API for global state, React Hook Form</p>
+                </div>
+                <div class="component">
+                    <h3>Authentication</h3>
+                    <p>JWT token storage, Protected routes, User session management</p>
+                </div>
+                <div class="component">
+                    <h3>Template Editor</h3>
+                    <p>Visual customization interface, Real-time preview, Form validation</p>
+                </div>
+            </div>
+
+            <!-- Backend Layer -->
+            <div class="layer">
+                <h2>⚙️ Backend Layer</h2>
+                <div class="component">
+                    <h3>Express.js Server</h3>
+                    <p>RESTful API endpoints, Middleware stack, CORS configuration</p>
+                </div>
+                <div class="component">
+                    <h3>Authentication Service</h3>
+                    <p>JWT token generation, Password hashing, User validation</p>
+                </div>
+                <div class="component">
+                    <h3>Template Engine</h3>
+                    <p>Dynamic code generation, Placeholder replacement, File processing</p>
+                </div>
+                <div class="component">
+                    <h3>File Management</h3>
+                    <p>Image upload handling, ZIP file generation, Static file serving</p>
+                </div>
+                <div class="component">
+                    <h3>Business Logic</h3>
+                    <p>Project CRUD operations, Template management, User management</p>
+                </div>
+            </div>
+
+            <!-- Database Layer -->
+            <div class="layer">
+                <h2>🗄️ Database Layer</h2>
+                <div class="component">
+                    <h3>PostgreSQL Database</h3>
+                    <p>Primary data storage, ACID compliance, Relational data model</p>
+                </div>
+                <div class="component">
+                    <h3>Prisma ORM</h3>
+                    <p>Type-safe database access, Migration management, Query optimization</p>
+                </div>
+                <div class="component">
+                    <h3>Data Models</h3>
+                    <p>Users, Templates, Projects, Uploads entities with relationships</p>
+                </div>
+                <div class="component">
+                    <h3>Data Security</h3>
+                    <p>Encrypted passwords, SQL injection prevention, Data validation</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-flow">
+            <h2>📊 Data Flow Architecture</h2>
+            <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; margin: 20px 0;">
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin: 10px;">User Interface</div>
+                <span class="flow-arrow">→</span>
+                <div style="background: #f3e5f5; padding: 15px; border-radius: 10px; margin: 10px;">API Gateway</div>
+                <span class="flow-arrow">→</span>
+                <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 10px;">Business Logic</div>
+                <span class="flow-arrow">→</span>
+                <div style="background: #fff3e0; padding: 15px; border-radius: 10px; margin: 10px;">Database</div>
+            </div>
+        </div>
+
+        <div class="external-services">
+            <h2>🌐 External Services Integration</h2>
+            <div class="services-grid">
+                <div class="service">
+                    <h4>Cloudinary</h4>
+                    <p>Image upload, storage, and optimization service</p>
+                </div>
+                <div class="service">
+                    <h4>JWT Authentication</h4>
+                    <p>Secure token-based authentication system</p>
+                </div>
+                <div class="service">
+                    <h4>File System</h4>
+                    <p>Temporary file storage for ZIP generation</p>
+                </div>
+                <div class="service">
+                    <h4>Email Service</h4>
+                    <p>User notifications and communication (Future)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <h2>🛠️ Technology Stack Overview</h2>
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h3>Frontend Technologies</h3>
+                    <ul class="tech-list">
+                        <li>React 18.3.1 + TypeScript</li>
+                        <li>Vite (Build Tool)</li>
+                        <li>Tailwind CSS + shadcn/ui</li>
+                        <li>React Router DOM</li>
+                        <li>React Hook Form + Zod</li>
+                        <li>Lucide React (Icons)</li>
+                    </ul>
+                </div>
+                <div class="tech-category">
+                    <h3>Backend Technologies</h3>
+                    <ul class="tech-list">
+                        <li>Node.js + Express.js</li>
+                        <li>PostgreSQL + Prisma ORM</li>
+                        <li>JWT Authentication</li>
+                        <li>Cloudinary Integration</li>
+                        <li>bcryptjs (Password Hashing)</li>
+                        <li>Archiver (ZIP Generation)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

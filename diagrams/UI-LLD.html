@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebsiteBoss - UI Low Level Design (LLD)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .ui-structure {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .page-section {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+        }
+        .page-section h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.4em;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .component-tree {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #28a745;
+        }
+        .component {
+            margin: 8px 0;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #007bff;
+            position: relative;
+        }
+        .component.level-1 { margin-left: 20px; border-left-color: #28a745; }
+        .component.level-2 { margin-left: 40px; border-left-color: #ffc107; }
+        .component.level-3 { margin-left: 60px; border-left-color: #dc3545; }
+        .component h4 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+            font-size: 1em;
+        }
+        .component p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+        .state-flow {
+            background: linear-gradient(145deg, #e8f4fd, #d1ecf1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #17a2b8;
+        }
+        .state-flow h2 {
+            color: #0c5460;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .flow-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .state-box {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 10px;
+            text-align: center;
+            min-width: 120px;
+            border: 2px solid #17a2b8;
+        }
+        .state-box h4 {
+            margin: 0 0 8px 0;
+            color: #0c5460;
+            font-size: 0.9em;
+        }
+        .state-box p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.8em;
+        }
+        .arrow {
+            font-size: 1.5em;
+            color: #17a2b8;
+            margin: 0 10px;
+        }
+        .routing-section {
+            background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #ffc107;
+        }
+        .routing-section h2 {
+            color: #856404;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .route-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .route-table th {
+            background: #ffc107;
+            color: #856404;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .route-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+        .route-table tr:last-child td {
+            border-bottom: none;
+        }
+        .route-table tr:hover {
+            background: #f8f9fa;
+        }
+        .services-section {
+            background: linear-gradient(145deg, #d4edda, #c3e6cb);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #28a745;
+        }
+        .services-section h2 {
+            color: #155724;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .service-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #28a745;
+        }
+        .service-card h3 {
+            color: #155724;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #28a745;
+            padding-bottom: 8px;
+        }
+        .service-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .service-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+            position: relative;
+            padding-left: 20px;
+        }
+        .service-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+        .service-card li:last-child {
+            border-bottom: none;
+        }
+        .hooks-section {
+            background: linear-gradient(145deg, #f8d7da, #f5c6cb);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #dc3545;
+        }
+        .hooks-section h2 {
+            color: #721c24;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .hooks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .hook-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #dc3545;
+        }
+        .hook-card h4 {
+            color: #721c24;
+            margin: 0 0 10px 0;
+            font-size: 1em;
+        }
+        .hook-card p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 WebsiteBoss - UI Low Level Design (LLD)</h1>
+        
+        <div class="ui-structure">
+            <!-- Main Pages Structure -->
+            <div class="page-section">
+                <h2>📄 Main Pages Structure</h2>
+                
+                <div class="component-tree">
+                    <h3>🏠 Index.tsx (Landing Page)</h3>
+                    <div class="component level-1">
+                        <h4>Navbar Component</h4>
+                        <p>Navigation with theme toggle, auth buttons</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>Hero Section</h4>
+                        <p>Main banner with CTA buttons, statistics</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>Features Grid</h4>
+                        <p>6 feature cards with icons and descriptions</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>Testimonials</h4>
+                        <p>Customer reviews with avatars and ratings</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>Industries Section</h4>
+                        <p>Template categories showcase</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>CTA Section</h4>
+                        <p>Final call-to-action with signup button</p>
+                    </div>
+                </div>
+
+                <div class="component-tree">
+                    <h3>🔐 Authentication Pages</h3>
+                    <div class="component level-1">
+                        <h4>SignIn.tsx</h4>
+                        <p>Login form with email/password, validation</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>SignUp.tsx</h4>
+                        <p>Registration form with confirmation</p>
+                    </div>
+                    <div class="component level-2">
+                        <h4>Form Validation</h4>
+                        <p>React Hook Form + Zod schema validation</p>
+                    </div>
+                    <div class="component level-2">
+                        <h4>Password Visibility Toggle</h4>
+                        <p>Eye icon for show/hide password</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard & Editor Structure -->
+            <div class="page-section">
+                <h2>⚡ Dashboard & Editor Structure</h2>
+                
+                <div class="component-tree">
+                    <h3>📊 Dashboard.tsx</h3>
+                    <div class="component level-1">
+                        <h4>Welcome Section</h4>
+                        <p>User greeting with statistics cards</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>Projects Grid</h4>
+                        <p>User's projects with edit/preview/download actions</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>Templates Showcase</h4>
+                        <p>Featured templates for quick start</p>
+                    </div>
+                </div>
+
+                <div class="component-tree">
+                    <h3>🛠️ TemplateEditor.tsx</h3>
+                    <div class="component level-1">
+                        <h4>Header with Actions</h4>
+                        <p>Save, Preview, Download buttons</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>Tabbed Interface</h4>
+                        <p>Basic Info, Design, Content, Social tabs</p>
+                    </div>
+                    <div class="component level-2">
+                        <h4>Basic Info Tab</h4>
+                        <p>Business details, contact information forms</p>
+                    </div>
+                    <div class="component level-2">
+                        <h4>Design Tab</h4>
+                        <p>Logo/image upload, color picker, branding</p>
+                    </div>
+                    <div class="component level-2">
+                        <h4>Content Tab</h4>
+                        <p>Products/services management with CRUD</p>
+                    </div>
+                    <div class="component level-2">
+                        <h4>Social Tab</h4>
+                        <p>Social media links configuration</p>
+                    </div>
+                </div>
+
+                <div class="component-tree">
+                    <h3>👁️ Preview.tsx</h3>
+                    <div class="component level-1">
+                        <h4>Browser Frame</h4>
+                        <p>Simulated browser window with controls</p>
+                    </div>
+                    <div class="component level-1">
+                        <h4>Iframe Container</h4>
+                        <p>Rendered website preview in iframe</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="state-flow">
+            <h2>🔄 State Management Flow</h2>
+            <div class="flow-diagram">
+                <div class="state-box">
+                    <h4>User Input</h4>
+                    <p>Form interactions, file uploads</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="state-box">
+                    <h4>Local State</h4>
+                    <p>useState, useEffect hooks</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="state-box">
+                    <h4>Validation</h4>
+                    <p>Zod schema validation</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="state-box">
+                    <h4>API Call</h4>
+                    <p>Service layer functions</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="state-box">
+                    <h4>UI Update</h4>
+                    <p>Re-render with new data</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="routing-section">
+            <h2>🛣️ React Router Configuration</h2>
+            <table class="route-table">
+                <thead>
+                    <tr>
+                        <th>Route Path</th>
+                        <th>Component</th>
+                        <th>Protection</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>/</td>
+                        <td>Index.tsx</td>
+                        <td>Public</td>
+                        <td>Landing page with features and CTA</td>
+                    </tr>
+                    <tr>
+                        <td>/signin</td>
+                        <td>SignIn.tsx</td>
+                        <td>Public</td>
+                        <td>User authentication form</td>
+                    </tr>
+                    <tr>
+                        <td>/signup</td>
+                        <td>SignUp.tsx</td>
+                        <td>Public</td>
+                        <td>User registration form</td>
+                    </tr>
+                    <tr>
+                        <td>/dashboard</td>
+                        <td>Dashboard.tsx</td>
+                        <td>Protected</td>
+                        <td>User dashboard with projects</td>
+                    </tr>
+                    <tr>
+                        <td>/templates</td>
+                        <td>Templates.tsx</td>
+                        <td>Public</td>
+                        <td>Template gallery and selection</td>
+                    </tr>
+                    <tr>
+                        <td>/editor/:templateId</td>
+                        <td>TemplateEditor.tsx</td>
+                        <td>Protected</td>
+                        <td>New project from template</td>
+                    </tr>
+                    <tr>
+                        <td>/editor/project/:projectId</td>
+                        <td>TemplateEditor.tsx</td>
+                        <td>Protected</td>
+                        <td>Edit existing project</td>
+                    </tr>
+                    <tr>
+                        <td>/preview/:projectId</td>
+                        <td>Preview.tsx</td>
+                        <td>Protected</td>
+                        <td>Website preview in iframe</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="services-section">
+            <h2>🔧 Frontend Services Layer</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>authService.ts</h3>
+                    <ul>
+                        <li>signIn(email, password)</li>
+                        <li>signUp(name, email, password)</li>
+                        <li>getAuthToken()</li>
+                        <li>isAuthenticated()</li>
+                        <li>getCurrentUser()</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>templateService.ts</h3>
+                    <ul>
+                        <li>getTemplates()</li>
+                        <li>getTemplate(id)</li>
+                        <li>getTemplatesByIndustry(industry)</li>
+                        <li>generatePreview(template, customData)</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>projectService.ts</h3>
+                    <ul>
+                        <li>getUserProjects()</li>
+                        <li>createProject(templateId, data)</li>
+                        <li>updateProject(projectId, data)</li>
+                        <li>getProject(projectId)</li>
+                        <li>deleteProject(projectId)</li>
+                        <li>downloadProject(projectId)</li>
+                        <li>uploadImage(file)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="hooks-section">
+            <h2>🎣 Custom Hooks & Utilities</h2>
+            <div class="hooks-grid">
+                <div class="hook-card">
+                    <h4>useToast</h4>
+                    <p>Toast notification management with queue system</p>
+                </div>
+                <div class="hook-card">
+                    <h4>useIsMobile</h4>
+                    <p>Responsive design hook for mobile detection</p>
+                </div>
+                <div class="hook-card">
+                    <h4>useTheme</h4>
+                    <p>Dark/light theme management with persistence</p>
+                </div>
+                <div class="hook-card">
+                    <h4>ThemeProvider</h4>
+                    <p>Context provider for theme state management</p>
+                </div>
+                <div class="hook-card">
+                    <h4>cn() Utility</h4>
+                    <p>Tailwind class merging with clsx and twMerge</p>
+                </div>
+                <div class="hook-card">
+                    <h4>Form Validation</h4>
+                    <p>Zod schemas for type-safe form validation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
