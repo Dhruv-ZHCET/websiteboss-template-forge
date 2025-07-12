@@ -13,7 +13,7 @@ const Index = () => {
       gradient: "from-blue-500 to-cyan-500"
     },
     {
-      icon: <Code className="h-12 w-12 text-green-600" />,
+      icon: <Code className="h-12 w-12 text-green-200" />,
       title: "Clean Code Export",
       description: "Download your website as clean HTML, CSS, and JavaScript files in a ZIP package.",
       gradient: "from-green-500 to-emerald-500"
@@ -25,19 +25,19 @@ const Index = () => {
       gradient: "from-purple-500 to-pink-500"
     },
     {
-      icon: <Download className="h-12 w-12 text-orange-600" />,
+      icon: <Download className="h-12 w-12 text-white" />,
       title: "Instant Download",
       description: "Get your complete website files instantly after customization is complete.",
       gradient: "from-orange-500 to-red-500"
     },
     {
-      icon: <Shield className="h-12 w-12 text-red-600" />,
+      icon: <Shield className="h-12 w-12 text-yellow-600" />,
       title: "Secure Platform",
       description: "Your data and creations are protected with enterprise-grade security.",
       gradient: "from-red-500 to-rose-500"
     },
     {
-      icon: <Zap className="h-12 w-12 text-yellow-600" />,
+      icon: <Zap className="h-12 w-12 text-yellow-300" />,
       title: "Lightning Fast",
       description: "Generate professional websites in minutes, not hours or days.",
       gradient: "from-yellow-500 to-amber-500"

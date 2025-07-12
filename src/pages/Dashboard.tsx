@@ -192,7 +192,7 @@ const Dashboard = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-100 text-sm font-medium">Total Projects</p>
+                  <p className="text-blue-100 text-sm font-bold">Total Projects</p>
                   <p className="text-3xl font-bold">{projects.length}</p>
                 </div>
                 <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
@@ -250,7 +250,7 @@ const Dashboard = () => {
                 <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md mx-auto">
                   You haven't created any projects yet. Choose a template below to get started and build your first website.
                 </p>
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 rounded-xl px-8">
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 rounded-xl px-8" onClick={()=>navigate("/templates")}>
                   <Plus className="h-4 w-4 mr-2" />
                   Create Your First Project
                 </Button>
